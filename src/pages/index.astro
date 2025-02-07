@@ -1,11 +1,60 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Badge from "../components/Badge.astro";
+import Experience from "../components/Experience.astro";
+import Section from "../components/Section.astro";
+import GitHubIcon from "../icons/GitHub.astro";
+import LinkedInIcon from "../icons/LinkedIn.astro";
+import MailIcon from "../icons/Mail.astro";
+import SocialPill from "../icons/SocialPill.astro";
+import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+	title="Joel Gauchia porfolio - Software Engineer and Full-Stack Developer"
+	description="Contact Joel to design a cutting-edge software solution for yor business"
+>
+	<main>
+		<Section>
+			<h1
+				class="text-5xl font-semibold flex flex-row items-center gap-x-4 pb-4"
+			>
+				Hey, I'm Joel Gauchia
+				<a
+					href="https://www.linkedin.com/in/joelgauchia"
+					target="_blank"
+					rel="noopener"
+					class="flex justify-center items-center"
+				>
+					<Badge>¡Let's connect!</Badge></a
+				>
+			</h1>
+			<h2 class="text-xl opacity-80">
+				<span
+					>Software Engineer <span class="opacity-80"
+						>& Full-Stack Web Developer. Based in
+					</span><span class="opacity-100">Girona</span><span
+						class="opacity-80">, Spain.</span
+					>
+				</span>
+				<nav class="flex mt-4 gap-x-4">
+					<SocialPill href="https://www.linkedin.com/in/joelgauchia">
+						<LinkedInIcon class="size-6" />
+						<span class="text-sm">LinkedIn</span>
+					</SocialPill>
+					<SocialPill href="https://github.com/joelgauchia">
+						<GitHubIcon class="size-6" />
+						<span class="text-sm">GitHub</span>
+					</SocialPill>
+					<SocialPill href="https://github.com/joelgauchia">
+						<MailIcon class="size-6" />
+						<span class="text-sm">joelgauchia@gmail.com</span>
+					</SocialPill>
+				</nav>
+			</h2>
+
+			<Section>
+				<Experience />
+			</Section>
+		</Section>
+	</main>
 </Layout>

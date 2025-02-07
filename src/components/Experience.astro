@@ -1,0 +1,31 @@
+---
+import ExperienceItem from "./ExperienceItem.astro";
+const EXPERIENCE = [
+    {
+        date: "May 2024 - Present",
+        title: "Junior Full-Stack Developer at Sunset Technologies",
+        description:
+            "Developed and maintained eFarma, an advanced e-prescription platform that streamlines the medication prescription process for healthcare professionals. " 
+            + "Built with Angular, PrimeNG, and TypeScript for a seamless front-end experience, and powered by Java Spring Boot for secure and efficient backend processing. Designed and implemented a boilerplate for new front-end projects"
+            + ", and a library of reusable components to speed up the development process of Angular applications. Migrated the company's front-end projects to Angular 17 version. Deployed many applications to production"
+            + " environments using Docker containers.",
+            link: "https://www.sunset-technologies.net/ca/efarma/",
+    },
+    {
+        date: "June 2023",
+        title: "Internship at Sunset Technologies",
+        description:
+            "Implemented an internal back-end microservice to obtain core information from the company's database. Developed new features for full-stack web applications. Maintaned existent applications.",
+    },
+];
+---
+
+<ol class="relative border-s border-gray-200 dark:border-gray-700">
+    {
+        EXPERIENCE.map((experience) => (
+            <li class="mb-10 ms-4">
+                <ExperienceItem {...experience} />
+            </li>
+        ))
+    }
+</ol>
