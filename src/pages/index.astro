@@ -1,7 +1,6 @@
 ---
 import Badge from "../components/Badge.astro";
 import Experience from "../components/Experience.astro";
-import Footer from "../components/Footer.astro";
 import Projects from "../components/Projects.astro";
 import Section from "../components/Section.astro";
 import GitHubIcon from "../icons/GitHub.astro";
@@ -16,17 +15,14 @@ import Layout from "../layouts/Layout.astro";
 	description="Contact Joel to design a cutting-edge software solution for yor business"
 >
 	<main class="px-4">
-		<Section class="lg:pt-44 lg:pb-44 pb-24 pt-14">
-			<img
-				class="rounded-full size-12 lg:size-16 lg:mb-8 mb-6"
+		<Section class="lg:pt-44 lg:pb-44 pb-24 pt-8">
+			<div class="flex flex-row items-center gap-4 lg:mb-8 mb-6">
+				<img
+				class="rounded-full size-12 lg:size-16"
 				src="https://media.licdn.com/dms/image/v2/D4E03AQEO2klkkz_sEg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1693848424133?e=1744243200&v=beta&t=WMcUi5wr-vnvmF0mxy5SV9FZjHh65pFk3onpIJdusyY"
 				alt="joel photo"
 			/>
-			<h1
-				class="lg:text-5xl md:text-4xl text-3xl font-semibold flex flex-row items-center gap-x-4 lg:pb-10 pb-6"
-			>
-				Hey, I'm Joel
-				<a
+			<a
 					href="https://www.linkedin.com/in/joelgauchia"
 					target="_blank"
 					rel="noopener"
@@ -34,6 +30,11 @@ import Layout from "../layouts/Layout.astro";
 				>
 					<Badge>¡Let's connect!</Badge></a
 				>
+			</div>
+			<h1
+				class="lg:text-5xl md:text-4xl text-3xl font-semibold flex flex-row items-center gap-x-4 lg:pb-10 pb-6"
+			>
+				Hey, I'm Joel Gauchia
 			</h1>
 			<h2 class="text-xl lg:text-2xl opacity-80 text-wrap maw-w-[700px]">
 				<span
@@ -69,7 +70,5 @@ import Layout from "../layouts/Layout.astro";
 			<h2 class="text-2xl font-semibold mb-6">Projects</h2>
 			<Projects />
 		</Section>
-
-		<Footer />
 	</main>
 </Layout>
