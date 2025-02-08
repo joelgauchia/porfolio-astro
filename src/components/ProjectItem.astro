@@ -1,41 +1,57 @@
 ---
-import TechnologyPill from './TechnologyPill.astro';
+import TechnologyPill from "./TechnologyPill.astro";
 interface Props {
     title: string;
     description: string;
     link?: string;
-    github: string;
+    github?: string;
     image: string;
     tags: string[];
+    demo?: boolean;
 }
 
-const { title, description, link, github, image, tags } = Astro.props;
+const { title, description, link, github, image, tags, demo } = Astro.props;
 ---
 
 <li class="bg-white rounded-lg shadow-lg relative">
-    <img class="max-h-[240px] object-contain rounded-t-lg w-full" src={image} alt={title} />
+    <img
+        class="max-h-[240px] object-contain rounded-t-lg w-full"
+        src={image}
+        alt={title}
+    />
     <div class="p-4">
         <h3 class="text-xl font-semibold">{title}</h3>
         <p class="mt-2 text-gray-600 text-pretty">{description}</p>
         <div class="mt-4 mb-16 flex flex-wrap gap-2">
-            {
-                tags.map((tag) => (
-                    <TechnologyPill>
-                        {tag}
-                    </TechnologyPill>
-                ))
-            }
+            {tags.map((tag) => <TechnologyPill>{tag}</TechnologyPill>)}
         </div>
-        <div class="mt-6 absolute bottom-4 right-4 flex justify-end gap-2">
-            <a
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-blue-500 hover:underline"
-                >View project</a
-            >
+        <div class="mt-6 absolute bottom-4 right-4 flex justify-end gap-3">
             {
                 link && (
+                    <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-blue-500 hover:underline"
+                    >
+                        View project
+                    </a>
+                )
+            }
+            {
+                demo && (
+                    <a
+                        href="mailto:joelgauchia@gmail.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-blue-500 hover:underline"
+                    >
+                        Request a demo
+                    </a>
+                )
+            }
+            {
+                github && (
                     <a
                         href={github}
                         target="_blank"

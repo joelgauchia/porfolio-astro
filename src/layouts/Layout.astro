@@ -4,7 +4,6 @@ import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/600.css";
 import "@fontsource/poppins/800.css";
 import "../styles/global.css";
-import Footer from "../components/Footer.astro";
 
 interface Props {
 	title: string;
@@ -25,11 +24,9 @@ const { description, title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body>
-		<div class="fixed inset-0 -z-10 min-h-screen w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
-		</div>
-		<Header />	
+		<div class="fixed inset-0 -z-10 min-h-screen w-full bg-white"><div class="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div></div>
+		<Header />
 		<slot />
-		
 	</body>
 </html>
 
