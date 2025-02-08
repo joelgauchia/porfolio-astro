@@ -1,6 +1,8 @@
 ---
 import Badge from "../components/Badge.astro";
 import Experience from "../components/Experience.astro";
+import Footer from "../components/Footer.astro";
+import Projects from "../components/Projects.astro";
 import Section from "../components/Section.astro";
 import GitHubIcon from "../icons/GitHub.astro";
 import LinkedInIcon from "../icons/LinkedIn.astro";
@@ -13,12 +15,17 @@ import Layout from "../layouts/Layout.astro";
 	title="Joel Gauchia porfolio - Software Engineer and Full-Stack Developer"
 	description="Contact Joel to design a cutting-edge software solution for yor business"
 >
-	<main>
-		<Section>
+	<main class="px-4">
+		<Section class="lg:pt-44 lg:pb-44 pb-24 pt-14">
+			<img
+				class="rounded-full size-12 lg:size-16 lg:mb-8 mb-6"
+				src="https://media.licdn.com/dms/image/v2/D4E03AQEO2klkkz_sEg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1693848424133?e=1744243200&v=beta&t=WMcUi5wr-vnvmF0mxy5SV9FZjHh65pFk3onpIJdusyY"
+				alt="joel photo"
+			/>
 			<h1
-				class="text-5xl font-semibold flex flex-row items-center gap-x-4 pb-4"
+				class="lg:text-5xl md:text-4xl text-3xl font-semibold flex flex-row items-center gap-x-4 lg:pb-10 pb-6"
 			>
-				Hey, I'm Joel Gauchia
+				Hey, I'm Joel
 				<a
 					href="https://www.linkedin.com/in/joelgauchia"
 					target="_blank"
@@ -28,7 +35,7 @@ import Layout from "../layouts/Layout.astro";
 					<Badge>¡Let's connect!</Badge></a
 				>
 			</h1>
-			<h2 class="text-xl opacity-80">
+			<h2 class="text-xl lg:text-2xl opacity-80 text-wrap maw-w-[700px]">
 				<span
 					>Software Engineer <span class="opacity-80"
 						>& Full-Stack Web Developer. Based in
@@ -36,25 +43,33 @@ import Layout from "../layouts/Layout.astro";
 						class="opacity-80">, Spain.</span
 					>
 				</span>
-				<nav class="flex mt-4 gap-x-4">
+				<nav class="flex mt-8 gap-4 flex-wrap">
 					<SocialPill href="https://www.linkedin.com/in/joelgauchia">
-						<LinkedInIcon class="size-6" />
+						<LinkedInIcon class="size-4 md:size-6" />
 						<span class="text-sm">LinkedIn</span>
 					</SocialPill>
 					<SocialPill href="https://github.com/joelgauchia">
-						<GitHubIcon class="size-6" />
+						<GitHubIcon class="size-4 md:size-6" />
 						<span class="text-sm">GitHub</span>
 					</SocialPill>
 					<SocialPill href="https://github.com/joelgauchia">
-						<MailIcon class="size-6" />
+						<MailIcon class="size-4 md:size-6" />
 						<span class="text-sm">joelgauchia@gmail.com</span>
 					</SocialPill>
 				</nav>
 			</h2>
-
-			<Section>
-				<Experience />
-			</Section>
 		</Section>
+
+		<Section id="experience" class="pb-24">
+			<h2 class="text-2xl font-semibold mb-6">Experience</h2>
+			<Experience />
+		</Section>
+
+		<Section id="projects" class="pb-24">
+			<h2 class="text-2xl font-semibold mb-6">Projects</h2>
+			<Projects />
+		</Section>
+
+		<Footer />
 	</main>
 </Layout>

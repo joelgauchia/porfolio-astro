@@ -3,7 +3,7 @@ import Header from "../components/Header.astro";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/600.css";
 import "@fontsource/poppins/800.css";
-import "./src/styles/global.css";
+import "../styles/global.css";
 
 interface Props {
 	title: string;
@@ -38,6 +38,7 @@ const { description, title } = Astro.props;
 
 	html {
 		font-family: "Poppins", system-ui, sans-serif;
+		scroll-behavior: smooth;
 	}
 
 	body {
@@ -48,4 +49,11 @@ const { description, title } = Astro.props;
 		min-height: 100vh;
 		overscroll-behavior: none;
 	}
+
+	@media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
 </style>

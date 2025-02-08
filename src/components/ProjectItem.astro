@@ -1,0 +1,51 @@
+---
+import TechnologyPill from './TechnologyPill.astro';
+interface Props {
+    title: string;
+    description: string;
+    link?: string;
+    github: string;
+    image: string;
+    tags: string[];
+}
+
+const { title, description, link, github, image, tags } = Astro.props;
+---
+
+<li class="bg-white dark:bg-gray-800 rounded-lg shadow-lg relative">
+    <img class="max-h-[240px] object-contain rounded-t-lg w-full" src={image} alt={title} />
+    <div class="p-4">
+        <h3 class="text-xl font-semibold">{title}</h3>
+        <p class="mt-2 text-gray-600 dark:text-gray-400 text-pretty">{description}</p>
+        <div class="mt-4 mb-16 flex flex-wrap gap-2">
+            {
+                tags.map((tag) => (
+                    <TechnologyPill>
+                        {tag}
+                    </TechnologyPill>
+                ))
+            }
+        </div>
+        <div class="mt-6 absolute bottom-4 right-4 flex justify-end gap-2">
+            <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-blue-500 dark:text-blue-400 hover:underline"
+                >View project</a
+            >
+            {
+                link && (
+                    <a
+                        href={github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-blue-500 dark:text-blue-400 hover:underline"
+                    >
+                        View code
+                    </a>
+                )
+            }
+        </div>
+    </div>
+</li>
