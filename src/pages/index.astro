@@ -1,6 +1,8 @@
 ---
 import Badge from "../components/Badge.astro";
+import Contact from "../components/Contact.astro";
 import Experience from "../components/Experience.astro";
+import Footer from "../components/Footer.astro";
 import Projects from "../components/Projects.astro";
 import Section from "../components/Section.astro";
 import GitHubIcon from "../icons/GitHub.astro";
@@ -70,5 +72,11 @@ import Layout from "../layouts/Layout.astro";
 			<h2 class="text-2xl font-semibold mb-6">Projects</h2>
 			<Projects />
 		</Section>
+
+		<Section id="contact" class="pb-24">
+			<Contact />
+		</Section>
+
+		<Footer />
 	</main>
 </Layout>
