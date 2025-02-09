@@ -1,44 +1,46 @@
+---
+import { actions } from "astro:actions";
+---
+
 <section>
     <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
         <h2 class="text-2xl text-center font-semibold mb-6">
             Have a project in mind?
         </h2>
-        <p
-            class="mb-8 lg:mb-16 font-light text-center text-gray-500 sm:text-xl"
-        >
-            I would like to help by transforming your ideas into software. Let's
-            get in touch!
+        <p class="mb-8 lg:mb-16 font-light text-center text-gray-500 sm:text-xl">
+            I would like to help by transforming your ideas into software. Let's get in touch!
         </p>
-        <form action="https://formspree.io/f/xanqblqg" method="POST" class="space-y-8">
+        <form action={actions.send} method="POST" class="space-y-8">
             <div>
-                <label
-                    for="email"
-                    class="block mb-2 text-sm font-medium text-gray-900"
-                    >Your email</label
-                >
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900">
+                    Your email
+                </label>
                 <input
                     type="email"
                     id="email"
+                    name="email"
                     class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5"
                     placeholder="name@domain.com"
                     required
                 />
             </div>
             <div class="sm:col-span-2">
-                <label
-                    for="message"
-                    class="block mb-2 text-sm font-medium text-gray-900"
-                    >Your message</label
-                >
+                <label for="message" class="block mb-2 text-sm font-medium text-gray-900">
+                    Your message
+                </label>
                 <textarea
                     id="message"
+                    name="message"
                     rows="6"
                     class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500"
-                    placeholder="Leave a comment..."></textarea>
+                    placeholder="Leave a comment..."
+                    required
+                ></textarea>
             </div>
             <div class="flex justify-end">
                 <button
-                class="inline-flex items-center px-4 py-2 text-sm font-medium bg-gray-900 text-white border transition border-gray-200 rounded-lg hover:bg-gray-100 hover:text-gray-800 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-100 focus:text-blue-700"
+                    type="submit"
+                    class="inline-flex items-center px-4 py-2 text-sm font-medium bg-gray-900 text-white border transition border-gray-200 rounded-lg hover:bg-gray-100 hover:text-gray-800 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-100 focus:text-blue-700"
                 >
                     Send Message
                 </button>

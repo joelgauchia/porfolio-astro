@@ -1,11 +1,19 @@
-// @ts-check
-import { defineConfig } from 'astro/config';
-
+import { defineConfig, envField } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
-// https://astro.build/config
+import netlify from "@astrojs/netlify";
+
 export default defineConfig({
+  env: {
+    schema: {
+      API_KEY_RESEND: envField.string({ context: "server", access: "secret"})
+    }
+  },
+
   vite: {
     plugins: [tailwindcss()]
-  }
+  },
+
+  output: "server",
+  adapter: netlify()
 });
