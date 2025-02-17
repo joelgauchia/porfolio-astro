@@ -4,6 +4,7 @@ import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/600.css";
 import "@fontsource/poppins/800.css";
 import "../styles/global.css";
+import Seo from "../components/Seo.astro";
 
 interface Props {
 	title: string;
@@ -16,6 +17,7 @@ const { description, title } = Astro.props;
 <!doctype html>
 <html lang="en">
 	<head>
+		<Seo />
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width" />
@@ -25,7 +27,12 @@ const { description, title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body>
-		<div class="fixed inset-0 -z-10 min-h-screen w-full bg-white"><div class="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div></div>
+		<div class="fixed inset-0 -z-10 min-h-screen w-full bg-white">
+			<div
+				class="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"
+			>
+			</div>
+		</div>
 		<Header />
 		<slot />
 	</body>
@@ -51,9 +58,8 @@ const { description, title } = Astro.props;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-        html {
-          scroll-behavior: auto;
-        }
-      }
-
+		html {
+			scroll-behavior: auto;
+		}
+	}
 </style>
