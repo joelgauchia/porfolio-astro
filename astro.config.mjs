@@ -6,7 +6,7 @@ import netlify from "@astrojs/netlify";
 export default defineConfig({
   env: {
     schema: {
-      API_KEY_RESEND: envField.string({ context: "server", access: "secret"})
+      RESEND_API_KEY: envField.string({ context: "server", access: "secret"})
     }
   },
 
