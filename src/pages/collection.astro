@@ -1,5 +1,6 @@
 ---
 import Footer from "../components/Footer.astro";
+import PixelPokeball from "../components/PixelPokeball.astro";
 import Section from "../components/Section.astro";
 import Layout from "../layouts/Layout.astro";
 
@@ -129,7 +130,10 @@ const CARDS = [
 			<div data-reveal>
 				<div class="flex items-center gap-4">
 					<span class="label text-accent">Not in the nav</span>
-					<span class="h-px flex-1 bg-line" aria-hidden="true"></span>
+					{/* The rule doubles as the ground the ball rolls along. */}
+					<span class="relative h-px flex-1 bg-line">
+						<PixelPokeball />
+					</span>
 				</div>
 
 				<h1
