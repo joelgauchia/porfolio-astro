@@ -2,7 +2,7 @@
 const SRC = "/assets/joel-1400.jpg";
 const SRCSET = "/assets/joel-900.jpg 675w, /assets/joel-1400.jpg 1050w";
 const SIZES = "(min-width: 1024px) 420px, 100vw";
-const ALT = "Joel Gauchia on a footbridge over the motorway, outside Girona";
+const ALT = "Portrait of Joel Gauchia";
 ---
 
 {/* The portrait ships as an ink plate: monochrome, high contrast, sitting in
@@ -44,7 +44,7 @@ const ALT = "Joel Gauchia on a footbridge over the motorway, outside Girona";
         and retires as soon as the visitor has found the interaction. */}
     <figcaption class="hint label mt-3 text-fg-subtle">
         <span class="on-hover">Move over to develop</span>
-        <span class="on-touch">Tap to develop</span>
+        <span class="on-touch">Tap around to develop</span>
     </figcaption>
 </figure>
 
@@ -83,12 +83,6 @@ const ALT = "Joel Gauchia on a footbridge over the motorway, outside Girona";
         opacity: 1;
     }
 
-    /* Touch has no pointer to follow, so a tap lifts the whole plate instead. */
-    .frame[data-touch][data-active] .reveal-layer {
-        -webkit-mask-image: none;
-        mask-image: none;
-    }
-
     .hint {
         opacity: 1;
         transition: opacity 0.5s var(--ease-out-quint);
@@ -116,14 +110,23 @@ const ALT = "Joel Gauchia on a footbridge over the motorway, outside Girona";
     const frame = document.getElementById("portrait-frame");
 
     if (frame) {
-        if (matchMedia("(hover: hover)").matches) {
-            frame.addEventListener("pointermove", (event) => {
-                const box = frame.getBoundingClientRect();
-                frame.style.setProperty("--x", `${event.clientX - box.left}px`);
-                frame.style.setProperty("--y", `${event.clientY - box.top}px`);
-            });
+        // Where the loupe sits, in coordinates local to the plate.
+        const aim = (event: MouseEvent | PointerEvent) => {
+            const box = frame.getBoundingClientRect();
+            frame.style.setProperty("--x", `${event.clientX - box.left}px`);
+            frame.style.setProperty("--y", `${event.clientY - box.top}px`);
+        };
 
-            frame.addEventListener("pointerenter", () => {
+        // Both inputs move the same loupe. Only the way you aim it differs:
+        // a pointer carries it along, a finger places it where it lands.
+        // A tap is deliberately not a drag — dragging would have to claim the
+        // touch gesture, and the plate is tall enough that swallowing scroll
+        // on it would cost more than the interaction is worth.
+        if (matchMedia("(hover: hover)").matches) {
+            frame.addEventListener("pointermove", aim);
+
+            frame.addEventListener("pointerenter", (event) => {
+                aim(event);
                 frame.setAttribute("data-active", "");
                 frame.setAttribute("data-used", "");
             });
@@ -132,9 +135,22 @@ const ALT = "Joel Gauchia on a footbridge over the motorway, outside Girona";
                 frame.removeAttribute("data-active")
             );
         } else {
-            frame.setAttribute("data-touch", "");
-            frame.addEventListener("click", () => {
-                frame.toggleAttribute("data-active");
+            frame.addEventListener("click", (event) => {
+                const showing = frame.hasAttribute("data-active");
+                const box = frame.getBoundingClientRect();
+                const x = event.clientX - box.left;
+                const y = event.clientY - box.top;
+                const from = {
+                    x: parseFloat(frame.style.getPropertyValue("--x")) || 0,
+                    y: parseFloat(frame.style.getPropertyValue("--y")) || 0,
+                };
+
+                // Tapping somewhere new moves the loupe; tapping where it
+                // already is puts it away.
+                const nearby = Math.hypot(x - from.x, y - from.y) < 60;
+
+                aim(event);
+                frame.toggleAttribute("data-active", !(showing && nearby));
                 frame.setAttribute("data-used", "");
             });
         }
