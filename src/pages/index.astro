@@ -5,73 +5,104 @@ import Experience from "../components/Experience.astro";
 import Footer from "../components/Footer.astro";
 import Projects from "../components/Projects.astro";
 import Section from "../components/Section.astro";
+import SectionHeading from "../components/SectionHeading.astro";
 import GitHubIcon from "../icons/GitHub.astro";
+import LinkedInIcon from "../icons/LinkedIn.astro";
 import MailIcon from "../icons/Mail.astro";
+import Portrait from "../components/Portrait.astro";
 import SocialPill from "../icons/SocialPill.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout
-	title="Joel Gauchia porfolio - Software Engineer and Full-Stack Developer"
-	description="Contact Joel to design a cutting-edge software solution for yor business"
+	title="Joel Gauchia — Software Engineer & Co-founder of Horalia"
+	description="Joel Gauchia is a software engineer in Girona, Spain. Co-founder of Horalia, an all-in-one HR platform, and full-stack engineer at AD Parts."
 >
-	<main class="px-4">
-		<Section class="lg:pt-44 lg:pb-44 pb-24 pt-24">
-			<div class="flex flex-row items-center gap-4 lg:mb-8 mb-6">
-				<img
-				class="rounded-full size-18 md:size-32"
-				src="assets/joel.jpeg"
-				alt="joel photo"
-			/>
-			<a
-					href="https://www.linkedin.com/in/joelgauchia"
-					target="_blank"
-					rel="noopener"
-					class="flex justify-center items-center md:ml-4"
-				>
-					<Badge>¡Let's connect!</Badge></a
-				>
+	<main id="main" class="flex-1">
+		<Section id="top" class="pb-20 pt-28 sm:pb-28 sm:pt-40 lg:pb-32 lg:pt-48">
+			<div data-reveal>
+				<Badge>Open to connect</Badge>
 			</div>
-			<h1
-				class="lg:text-5xl gradient-text md:text-4xl text-3xl font-semibold flex flex-row items-center gap-x-4 lg:pb-10 pb-6"
-			>
-				Hey, I'm Joel Gauchia
-			</h1>
-			<h2 class="text-xl lg:text-2xl opacity-80 text-wrap maw-w-[700px]">
+
+			{/* The masthead: name at full measure, role set in italic beneath it. */}
+			<h1 class="mt-7 sm:mt-9" data-reveal style="--reveal-delay:60ms">
 				<span
-					>Software Engineer <span class="opacity-80"
-						>& Full-Stack Web Developer. Based in
-					</span><span class="opacity-100">Girona</span><span
-						class="opacity-80">, Spain.</span
-					>
+					class="font-display block text-[clamp(3rem,12.5vw,8rem)] text-fg"
+				>
+					Joel Gauchia
 				</span>
-				<nav class="flex mt-8 gap-4 flex-wrap">
-					<SocialPill href="https://github.com/joelgauchia">
-						<GitHubIcon class="size-4 md:size-6" />
-						<span class="text-sm">GitHub</span>
-					</SocialPill>
-					<SocialPill href="mailto:joelgauchia@gmail.com">
-						<MailIcon class="size-4 md:size-6" />
-						<span class="text-sm">joelgauchia@gmail.com</span>
-					</SocialPill>
-				</nav>
-			</h2>
+				<span
+					class="font-display mt-1 block text-[clamp(1.5rem,5vw,3.25rem)] italic text-fg-subtle sm:mt-2"
+				>
+					Software Engineer &amp; co-founder
+				</span>
+			</h1>
+
+			<div
+				class="mt-12 grid gap-10 border-t border-line pt-10 lg:mt-16 lg:grid-cols-12 lg:gap-14"
+			>
+				<div
+					class="flex flex-col justify-center lg:col-span-7"
+					data-reveal
+					style="--reveal-delay:120ms"
+				>
+					<p class="max-w-xl text-pretty text-xl leading-snug sm:text-2xl">
+						I build web products end to end — from the database schema up to
+						the last pixel. Away from the screen it's the
+						<span class="font-display text-2xl italic sm:text-3xl">
+							fitness lifestyle</span
+						>: consistency over months, and no shortcuts. Software is no
+						different.
+					</p>
+
+					<nav
+						class="flex flex-wrap gap-x-8 gap-y-4 pt-12"
+						aria-label="Social links"
+					>
+						<SocialPill href="https://github.com/joelgauchia">
+							<GitHubIcon class="size-4" />
+							<span>GitHub</span>
+						</SocialPill>
+						<SocialPill href="https://www.linkedin.com/in/joelgauchia">
+							<LinkedInIcon class="size-4" />
+							<span>LinkedIn</span>
+						</SocialPill>
+						<SocialPill href="mailto:joelgauchia@gmail.com">
+							<MailIcon class="size-4" />
+							<span>joelgauchia@gmail.com</span>
+						</SocialPill>
+					</nav>
+				</div>
+
+				<div class="lg:col-span-5" data-reveal style="--reveal-delay:180ms">
+					<Portrait />
+				</div>
+			</div>
 		</Section>
 
-		<Section id="experience" class="pb-24">
-			<h2 class="text-2xl font-semibold mb-6">Experience</h2>
+		<Section id="experience" class="pb-20 sm:pb-28 lg:pb-36">
+			<SectionHeading
+				index="01"
+				label="Career"
+				title="Where I've worked"
+				lede="Three years of production software in regulated domains — healthcare e-prescriptions first, automotive parts distribution now."
+			/>
 			<Experience />
 		</Section>
 
-		<Section id="projects" class="pb-24">
-			<h2 class="text-2xl font-semibold mb-6">Projects</h2>
+		<Section id="projects" class="pb-20 sm:pb-28 lg:pb-36">
+			<SectionHeading
+				index="02"
+				label="Co-founder"
+				title="Horalia"
+			/>
 			<Projects />
 		</Section>
 
-		<Section id="contact" class="pb-24">
+		<Section id="contact" class="pb-20 sm:pb-28 lg:pb-36">
 			<Contact />
 		</Section>
-
-		<Footer />
 	</main>
+
+	<Footer />
 </Layout>

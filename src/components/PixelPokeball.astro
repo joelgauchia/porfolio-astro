@@ -1,0 +1,148 @@
+---
+// A 16×16 sprite drawn by hand. `o` outline, `r` red shell, `k` band,
+// `w` lower shell, `.` transparent.
+const SPRITE = [
+    "......oooo......",
+    "....oorrrroo....",
+    "...orrrrrrrro...",
+    "..orrrrrrrrrro..",
+    "..orrrrrrrrrro..",
+    ".orrrrrrrrrrrro.",
+    ".orrrrrrrrrrrro.",
+    ".okkkkkwwkkkkko.",
+    ".okkkkkwwkkkkko.",
+    ".owwwwwwwwwwwwo.",
+    ".owwwwwwwwwwwwo.",
+    "..owwwwwwwwwwo..",
+    "..owwwwwwwwwwo..",
+    "...owwwwwwwwo...",
+    "....oowwwwoo....",
+    "......oooo......",
+];
+
+const INK: Record<string, string> = {
+    o: "#1a1714",
+    k: "#1a1714",
+    r: "#e5533d",
+    w: "#f4f1ea",
+};
+
+// Collapse each row into horizontal runs so the sprite ships as ~30 rects
+// instead of one per pixel.
+const runs: { x: number; y: number; w: number; fill: string }[] = [];
+
+SPRITE.forEach((row, y) => {
+    let x = 0;
+    while (x < row.length) {
+        const char = row[x];
+        let width = 1;
+        while (row[x + width] === char) width++;
+        if (char !== ".") runs.push({ x, y, w: width, fill: INK[char] });
+        x += width;
+    }
+});
+---
+
+{/* Rolls the length of the rule, then wobbles the way a thrown ball does
+    before it settles. Decorative, so it stays out of the accessibility tree. */}
+<span class="ball" aria-hidden="true">
+    <span class="ball-wobble">
+        <svg
+            class="ball-spin"
+            viewBox="0 0 16 16"
+            width="24"
+            height="24"
+            shape-rendering="crispEdges"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            {
+                runs.map((run) => (
+                    <rect
+                        x={run.x}
+                        y={run.y}
+                        width={run.w}
+                        height="1"
+                        fill={run.fill}
+                    />
+                ))
+            }
+        </svg>
+    </span>
+</span>
+
+<style>
+    .ball {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 24px;
+        height: 24px;
+        animation: ball-travel 1.6s var(--ease-out-quint) 0.6s both;
+    }
+
+    /* The rail is the positioning context, so 100% here is its full width. */
+    @keyframes ball-travel {
+        from {
+            left: calc(0% + 0px);
+        }
+        to {
+            left: calc(100% - 24px);
+        }
+    }
+
+    .ball-spin {
+        display: block;
+        /* Three full turns, so it lands upright. */
+        animation: ball-spin 1.6s linear 0.6s both;
+    }
+
+    @keyframes ball-spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(1080deg);
+        }
+    }
+
+    .ball-wobble {
+        display: block;
+        transform-origin: 50% 100%;
+        animation: ball-wobble 1.1s var(--ease-out-quint) 2.2s both;
+    }
+
+    @keyframes ball-wobble {
+        0%,
+        100% {
+            transform: rotate(0deg);
+        }
+        15% {
+            transform: rotate(-14deg);
+        }
+        35% {
+            transform: rotate(12deg);
+        }
+        55% {
+            transform: rotate(-8deg);
+        }
+        75% {
+            transform: rotate(5deg);
+        }
+        90% {
+            transform: rotate(-2deg);
+        }
+    }
+
+    /* Parked at the end of the rule, with none of the journey. */
+    @media (prefers-reduced-motion: reduce) {
+        .ball {
+            animation: none;
+            left: calc(100% - 24px);
+        }
+
+        .ball-spin,
+        .ball-wobble {
+            animation: none;
+        }
+    }
+</style>

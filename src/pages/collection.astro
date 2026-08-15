@@ -1,0 +1,287 @@
+---
+import Footer from "../components/Footer.astro";
+import Section from "../components/Section.astro";
+import Layout from "../layouts/Layout.astro";
+
+// Transcribed from each PSA label, in the order the slabs are kept.
+const CARDS = [
+	{
+		slug: "pikachu-2024",
+		name: "Pikachu",
+		set: "SV-P Promo · Gym Event Campaign",
+		number: "197/SV-P",
+		year: "2024",
+		grade: "10",
+		gradeLabel: "Gem Mint",
+		cert: "154443495",
+		illustrator: "Atsushi Furusawa",
+	},
+	{
+		slug: "pikachu-2023",
+		name: "Pikachu",
+		set: "SV-P Promo · Gym Event Campaign",
+		number: "120/SV-P",
+		year: "2023",
+		grade: "10",
+		gradeLabel: "Gem Mint",
+		cert: "144509500",
+		illustrator: "Jiro Sasumo",
+	},
+	{
+		slug: "pikachu-mcdonalds",
+		name: "Pikachu",
+		set: "M-P Promo · McDonald's",
+		number: "020/M-P",
+		year: "2025",
+		grade: "10",
+		gradeLabel: "Gem Mint",
+		cert: "129337911",
+		illustrator: "Yuu Nishida",
+	},
+	{
+		slug: "charizard-v",
+		name: "Charizard V",
+		set: "SWSH Black Star · Champion's Path box",
+		number: "SWSH050",
+		year: "2020",
+		grade: "10",
+		gradeLabel: "Gem Mint",
+		cert: "150072623",
+		illustrator: "5ban Graphics",
+	},
+	{
+		slug: "poliwrath",
+		name: "Poliwrath",
+		set: "EX FireRed & LeafGreen · reverse foil",
+		number: "11/112",
+		year: "2004",
+		grade: "9",
+		gradeLabel: "Mint",
+		cert: "87117740",
+		illustrator: "Ken Sugimori",
+	},
+	{
+		slug: "raichu-ex",
+		name: "Raichu ex",
+		set: "Miracle of the Desert · 1st ed.",
+		number: "023/053",
+		year: "2003",
+		grade: "6",
+		gradeLabel: "Ex-Mint",
+		cert: "139812450",
+		illustrator: "Ryo Ueda",
+	},
+	{
+		slug: "salamence-ex",
+		name: "Salamence ex",
+		set: "Clash of the Blue Sky · 1st ed.",
+		number: "064/082",
+		year: "2004",
+		grade: "8",
+		gradeLabel: "Near Mint–Mint",
+		cert: "151150219",
+		illustrator: "Hikaru Koike",
+	},
+	{
+		slug: "palkia-lv-x",
+		name: "Palkia LV.X",
+		set: "Diamond & Pearl · Cry from the Deep, 1st ed.",
+		number: "DP3",
+		year: "2007",
+		grade: "9",
+		gradeLabel: "Mint",
+		cert: "148042755",
+		illustrator: "Ryo Ueda",
+	},
+	{
+		slug: "lugia",
+		name: "Lugia",
+		set: "Neo Genesis",
+		number: "No. 249",
+		year: "2000",
+		grade: "8",
+		gradeLabel: "Near Mint–Mint",
+		cert: "157522061",
+		illustrator: "Hironobu Yoshida",
+	},
+	{
+		slug: "mewtwo-ex",
+		name: "Mewtwo ex",
+		set: "Expansion Pack ex · 1st ed.",
+		number: "026/055",
+		year: "2003",
+		grade: "8",
+		gradeLabel: "Near Mint–Mint",
+		cert: "158530956",
+		illustrator: "Katsura Tabata",
+	},
+];
+---
+
+<Layout
+	title="Not in the nav — Joel Gauchia"
+	description="An unlisted page."
+	noindex
+	minimalNav
+>
+	<main id="main" class="flex-1">
+		<Section class="pb-16 pt-28 sm:pt-36 lg:pt-40">
+			<div data-reveal>
+				<div class="flex items-center gap-4">
+					<span class="label text-accent">Not in the nav</span>
+					<span class="h-px flex-1 bg-line" aria-hidden="true"></span>
+				</div>
+
+				<h1
+					class="font-display mt-5 text-[clamp(2.5rem,9vw,5.5rem)] text-fg"
+				>
+					You went looking.
+				</h1>
+
+				<p
+					class="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-fg-muted"
+				>
+					Nothing on this page is on my CV. Ten graded slabs, mostly Japanese,
+					mostly Pikachu — kept in a drawer and thought about more often than
+					I would admit anywhere else on this site.
+				</p>
+			</div>
+		</Section>
+
+		<Section class="pb-24 sm:pb-32">
+			<div
+				class="mb-8 flex items-center gap-4 border-t border-line pt-6"
+				data-reveal
+			>
+				<span class="label text-fg-subtle">Click a slab to turn it over</span>
+				<span class="h-px flex-1 bg-line" aria-hidden="true"></span>
+			</div>
+
+			<ol class="grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 lg:grid-cols-4">
+				{
+					CARDS.map((card, index) => (
+						<li
+							data-reveal
+							style={`--reveal-delay:${(index % 4) * 70}ms`}
+						>
+							<button
+								type="button"
+								class="slab group w-full"
+								aria-pressed="false"
+								aria-label={`${card.name}, ${card.year}. Show the back of the slab`}
+							>
+								<span class="slab-inner block">
+									<img
+										class="slab-face"
+										src={`/assets/cards/${card.slug}-front.webp`}
+										alt={`${card.name} ${card.number}, graded PSA ${card.grade}`}
+										width="640"
+										height="1075"
+										loading={index < 4 ? "eager" : "lazy"}
+										decoding="async"
+									/>
+									<img
+										class="slab-face slab-back"
+										src={`/assets/cards/${card.slug}-back.webp`}
+										alt=""
+										aria-hidden="true"
+										width="640"
+										height="1075"
+										loading="lazy"
+										decoding="async"
+									/>
+								</span>
+							</button>
+
+							<div class="mt-4 flex items-baseline gap-3">
+								<span class="label text-fg-subtle">
+									{String(index + 1).padStart(2, "0")}
+								</span>
+								<span class="label text-accent">PSA {card.grade}</span>
+							</div>
+
+							<h2 class="font-display mt-1 text-2xl">{card.name}</h2>
+
+							<p class="mt-1 font-mono text-[11px] leading-relaxed text-fg-muted">
+								{card.year} · {card.set}
+							</p>
+							<p class="mt-1.5 font-mono text-[11px] leading-relaxed text-fg-subtle">
+								{card.number} · Illus. {card.illustrator}
+								<br />
+								Cert {card.cert} · {card.gradeLabel}
+							</p>
+						</li>
+					))
+				}
+			</ol>
+		</Section>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	/* Each slab turns on its own axis, the way you would flip it in your hand. */
+	.slab {
+		perspective: 1400px;
+		cursor: pointer;
+		background: none;
+		border: 0;
+		padding: 0;
+	}
+
+	/* The source photographs vary by a few percent in height. The frame fixes
+	   one ratio for every slab and the faces cover it, so the grid lines up. */
+	.slab-inner {
+		position: relative;
+		aspect-ratio: 640 / 1075;
+		transform-style: preserve-3d;
+		transition: transform 0.75s var(--ease-out-quint);
+	}
+
+	.slab:hover .slab-inner {
+		transform: translateY(-4px);
+	}
+
+	.slab[aria-pressed="true"] .slab-inner,
+	.slab[aria-pressed="true"]:hover .slab-inner {
+		transform: rotateY(180deg);
+	}
+
+	/* The one place the site's square corners give way: these are photographs
+	   of physical objects, and a slab has rounded corners. */
+	.slab-face {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+		border-radius: 8px;
+	}
+
+	/* The back sits stacked on the front, pre-rotated out of view. */
+	.slab-back {
+		transform: rotateY(180deg);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.slab-inner {
+			transition-duration: 0.01ms;
+		}
+
+		.slab:hover .slab-inner {
+			transform: none;
+		}
+	}
+</style>
+
+<script>
+	for (const slab of document.querySelectorAll<HTMLButtonElement>(".slab")) {
+		slab.addEventListener("click", () => {
+			const flipped = slab.getAttribute("aria-pressed") === "true";
+			slab.setAttribute("aria-pressed", String(!flipped));
+		});
+	}
+</script>

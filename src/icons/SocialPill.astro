@@ -1,6 +1,23 @@
-<a class="inline-flex items-center justify-center gap-2 px-4 py-1 text-gray-800 transition bg-gray-100 border border-gray-300 rounded-full text-md hover:bg-gray-900 hover:text-white group max-w-fit focus:outline-none focus-visible:outline-none focus-visible:ring focus-visible:ring-white focus-visible:ring-offset-2 active:bg-black" 
-    {...Astro.props}
-    target="_blank"
-    rel="noopener noreferrer">
+---
+interface Props {
+    href: string;
+    class?: string;
+}
+
+const { class: className = "", ...rest } = Astro.props;
+const external = !String(rest.href).startsWith("mailto:");
+---
+
+{/* A ruled index entry: the underline is always there, and thickens into the
+    accent on hover. No pill, no shadow, no lift. */}
+<a
+    class:list={[
+        "group inline-flex max-w-fit items-center gap-2 border-b border-line pb-1 font-mono text-xs text-fg-muted transition-colors duration-200 hover:border-accent hover:text-accent",
+        className,
+    ]}
+    {...rest}
+    target={external ? "_blank" : undefined}
+    rel={external ? "noopener noreferrer" : undefined}
+>
     <slot />
 </a>

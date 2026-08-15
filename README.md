@@ -1,48 +1,66 @@
-# Astro Starter Kit: Basics
+# joelgauchia.dev — personal portfolio
+
+Personal portfolio built with [Astro](https://astro.build) (SSR) and
+[Tailwind CSS v4](https://tailwindcss.com). Contact form submissions are
+delivered with [Resend](https://resend.com) via an Astro Action.
+
+## Getting started
 
 ```sh
-npm create astro@latest -- --template basics
+npm install
+npm run dev
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+| Command           | Action                                       |
+| :---------------- | :------------------------------------------- |
+| `npm run dev`     | Start the dev server at `localhost:4321`      |
+| `npm run build`   | Build the SSR bundle to `./dist/`             |
+| `npm run preview` | Preview the production build locally          |
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Environment
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+| Variable          | Required | Notes                                           |
+| :---------------- | :------- | :---------------------------------------------- |
+| `RESEND_API_KEY`  | Runtime  | Resend API key used by the contact form action   |
 
-## 🚀 Project Structure
+The key is read at **request time** (`getSecret` from `astro:env/server`), so it
+is never baked into the build output. That means the running process — not the
+build — needs it:
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+docker run -e RESEND_API_KEY=re_xxx -p 4321:4321 portfolio-joel
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Without it the site still renders normally; only the contact form responds with
+a "something went wrong" message.
 
-## 🧞 Commands
+## Design
 
-All commands are run from the root of the project, from a terminal:
+The layout follows an editorial/print model rather than a card-based one:
+hairline rules instead of boxes, effectively square corners, and a numbered
+section index set in monospace.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Three typefaces, each with one job:
 
-## 👀 Want to learn more?
+| Face             | Used for                                      |
+| :--------------- | :-------------------------------------------- |
+| Instrument Serif | Display type — the masthead, section and item titles |
+| Inter            | Running prose                                 |
+| JetBrains Mono   | Labels, indexes, dates, captions and stack lists (the `label` utility) |
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Colours are warm paper and ink with a single vermillion accent. The backdrop in
+`Layout.astro` draws the two margin rules that the content column aligns to,
+plus a faint SVG grain.
+
+## Theming
+
+Light and dark themes are driven by a `.dark` class on `<html>`, set before
+first paint by an inline script in `src/layouts/Layout.astro`. Colours are
+defined once as semantic tokens in `src/styles/global.css` (`--color-bg`,
+`--color-fg`, `--color-accent`, …) and flipped in the `:root.dark` block, so
+components only ever reference `bg-bg`, `text-fg-muted`, `border-line`, etc.
+
+## Deployment
+
+`deploy.sh <project-name>` builds a `linux/amd64` image from the `Dockerfile`,
+ships it to the remote host over SSH, and loads it there.

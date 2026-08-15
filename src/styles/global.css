@@ -1,58 +1,170 @@
 @import "tailwindcss";
 
-.gradient-text {
-    background: linear-gradient(
-        to right,
-        #000000,
-        #505050, 
-        #b7b7b7, 
-        #505050,
-        #000000,
-        #505050,
-        #b7b7b7
-    );
-    background-size: 300% 300%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: gradient 6s linear infinite;
+/* Dark mode is driven by a `.dark` class on <html>, set before paint by the
+   inline script in Layout.astro so the theme never flashes. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    /* Three voices, each with one job: the serif sets display type, the sans
+       carries prose, the mono handles every label, index and caption. */
+    --font-display: "Instrument Serif", ui-serif, Georgia, Cambria, serif;
+    --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system,
+        "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular",
+        Menlo, monospace;
+
+    /* Paper and ink. The dark values live in the :root override below, so
+       every utility built on them (bg-bg, text-fg, border-line…) flips at once. */
+    --color-bg: #f7f4ef;
+    --color-surface: #fffdf9;
+    --color-surface-2: #efeadf;
+    --color-fg: #16130f;
+    --color-fg-muted: #56504a;
+    --color-fg-subtle: #8b8378;
+    --color-line: #ddd6c9;
+    --color-line-strong: #c3b9a8;
+    --color-accent: #c03a1d;
+    --color-accent-soft: #f4e5de;
+
+    /* Print, not plastic: corners stay effectively square. */
+    --radius-card: 2px;
+
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+    --animate-blink: blink 2.6s ease-in-out infinite;
 }
 
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
+@layer theme {
+    :root.dark {
+        --color-bg: #12100e;
+        --color-surface: #1a1714;
+        --color-surface-2: #221e19;
+        --color-fg: #f2ede4;
+        --color-fg-muted: #a49b8f;
+        --color-fg-subtle: #7a7167;
+        --color-line: #2c2721;
+        --color-line-strong: #443d34;
+        --color-accent: #ff6a3d;
+        --color-accent-soft: #2a1610;
+    }
+}
+
+@keyframes blink {
+    0%,
+    100% {
+        opacity: 1;
     }
     50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
+        opacity: 0.25;
     }
 }
 
-.nav-link {
-    color: #383838;
-    transition: all 0.3s;
-    font-weight: 500; 
-    position: relative;
-    font-size: 0.875rem;
+@layer base {
+    html {
+        font-family: var(--font-sans);
+        scroll-behavior: smooth;
+        background-color: var(--color-bg);
+        color-scheme: light;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    html.dark {
+        color-scheme: dark;
+    }
+
+    /* No background on <body>: it would paint over the -z-10 backdrop layer.
+       The page colour lives on <html> so the canvas stays correct. */
+    body {
+        color: var(--color-fg);
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
+        overscroll-behavior-y: none;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    /* Instrument Serif is drawn tight and tall; it needs negative tracking and
+       a compressed leading to read as display type rather than body copy. */
+    .font-display {
+        letter-spacing: -0.02em;
+        line-height: 0.95;
+        font-weight: 400;
+    }
+
+    ::selection {
+        background-color: var(--color-accent);
+        color: var(--color-bg);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 3px;
+        border-radius: 1px;
+    }
+
+    /* Only the accent ring should mark focus — never the default halo. */
+    :focus:not(:focus-visible) {
+        outline: none;
+    }
 }
 
-.nav-link:hover {
-    color: #050505; 
+/* Every small caps label on the site: section indexes, dates, captions, tags. */
+@utility label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
 }
 
-.nav-link::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    left: 0;
-    bottom: 0;
-    background-color: #050505;
-    transition: all 0.3s;
+/* Links in running prose: the underline sits low and thickens on hover
+   instead of appearing from nothing. */
+@utility link-underline {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    text-decoration-color: var(--color-line-strong);
+    transition:
+        text-decoration-color 0.2s var(--ease-out-quint),
+        color 0.2s var(--ease-out-quint);
+
+    &:hover {
+        color: var(--color-accent);
+        text-decoration-color: var(--color-accent);
+    }
 }
 
-.nav-link:hover::after {
-    width: 100%;
+/* Elements tagged data-reveal start hidden and are released by the
+   IntersectionObserver in Layout.astro (or immediately, if JS is off). */
+@utility reveal-hidden {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+}
+
+[data-reveal] {
+    transition:
+        opacity 0.8s var(--ease-out-quint),
+        transform 0.8s var(--ease-out-quint);
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }

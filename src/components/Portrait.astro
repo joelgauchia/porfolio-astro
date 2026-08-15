@@ -1,0 +1,142 @@
+---
+const SRC = "/assets/joel-1400.jpg";
+const SRCSET = "/assets/joel-900.jpg 675w, /assets/joel-1400.jpg 1050w";
+const SIZES = "(min-width: 1024px) 420px, 100vw";
+const ALT = "Joel Gauchia on a footbridge over the motorway, outside Girona";
+---
+
+{/* The portrait ships as an ink plate: monochrome, high contrast, sitting in
+    the paper palette. Full colour exists underneath and is uncovered only
+    where the pointer passes — a loupe moving over the plate. */}
+<figure class="portrait select-none">
+    <div
+        id="portrait-frame"
+        class="frame relative aspect-[4/5] overflow-hidden border border-line"
+    >
+        <img
+            class="plate absolute inset-0 size-full object-cover"
+            src={SRC}
+            srcset={SRCSET}
+            sizes={SIZES}
+            alt={ALT}
+            width="1050"
+            height="1400"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+        />
+
+        <img
+            class="reveal-layer absolute inset-0 size-full object-cover"
+            src={SRC}
+            srcset={SRCSET}
+            sizes={SIZES}
+            alt=""
+            aria-hidden="true"
+            width="1050"
+            height="1400"
+            loading="eager"
+            decoding="async"
+        />
+    </div>
+
+    {/* The affordance sits outside the frame so it never fights the image,
+        and retires as soon as the visitor has found the interaction. */}
+    <figcaption class="hint label mt-3 text-fg-subtle">
+        <span class="on-hover">Move over to develop</span>
+        <span class="on-touch">Tap to develop</span>
+    </figcaption>
+</figure>
+
+<style>
+    .frame {
+        --x: 50%;
+        --y: 50%;
+    }
+
+    /* The plate. Warmed slightly so the monochrome reads as ink on paper
+       rather than as a desaturated photograph. */
+    .plate {
+        filter: grayscale(1) sepia(0.28) contrast(1.12) brightness(1.02);
+    }
+
+    :global(.dark) .plate {
+        filter: grayscale(1) sepia(0.16) contrast(1.18) brightness(0.82);
+    }
+
+    .reveal-layer {
+        opacity: 0;
+        transition: opacity 0.4s var(--ease-out-quint);
+        -webkit-mask-image: radial-gradient(
+            circle 150px at var(--x) var(--y),
+            #000 55%,
+            transparent 100%
+        );
+        mask-image: radial-gradient(
+            circle 150px at var(--x) var(--y),
+            #000 55%,
+            transparent 100%
+        );
+    }
+
+    .frame[data-active] .reveal-layer {
+        opacity: 1;
+    }
+
+    /* Touch has no pointer to follow, so a tap lifts the whole plate instead. */
+    .frame[data-touch][data-active] .reveal-layer {
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+
+    .hint {
+        opacity: 1;
+        transition: opacity 0.5s var(--ease-out-quint);
+    }
+
+    .portrait:has(.frame[data-used]) .hint {
+        opacity: 0;
+    }
+
+    .on-touch {
+        display: none;
+    }
+
+    @media (hover: none) {
+        .on-hover {
+            display: none;
+        }
+        .on-touch {
+            display: inline;
+        }
+    }
+</style>
+
+<script>
+    const frame = document.getElementById("portrait-frame");
+
+    if (frame) {
+        if (matchMedia("(hover: hover)").matches) {
+            frame.addEventListener("pointermove", (event) => {
+                const box = frame.getBoundingClientRect();
+                frame.style.setProperty("--x", `${event.clientX - box.left}px`);
+                frame.style.setProperty("--y", `${event.clientY - box.top}px`);
+            });
+
+            frame.addEventListener("pointerenter", () => {
+                frame.setAttribute("data-active", "");
+                frame.setAttribute("data-used", "");
+            });
+
+            frame.addEventListener("pointerleave", () =>
+                frame.removeAttribute("data-active")
+            );
+        } else {
+            frame.setAttribute("data-touch", "");
+            frame.addEventListener("click", () => {
+                frame.toggleAttribute("data-active");
+                frame.setAttribute("data-used", "");
+            });
+        }
+    }
+</script>

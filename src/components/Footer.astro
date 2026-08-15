@@ -1,12 +1,53 @@
-<footer class="scroll-m-20 w-full lg:mx-auto container lg:max-w-4xl md:max-w-2xl bg-white rounded-full shadow-sm mb-4">
-    <div
-        class="w-full mx-auto max-w-screen-xl p-3 flex items-center justify-between"
-    >
-        <span class="text-sm text-gray-500 sm:mt-0"
-            >2025
-        </span>
-        <span class="text-sm text-black sm:text-center"
-            >Joel Gauchia
-        </span>
+---
+const SOCIALS = [
+    { label: "GitHub", href: "https://github.com/joelgauchia" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/joelgauchia" },
+    { label: "Email", href: "mailto:joelgauchia@gmail.com" },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-line">
+    <div class="mx-auto w-full max-w-5xl px-6 py-10 sm:px-10">
+        <div
+            class="flex flex-col-reverse gap-6 sm:flex-row sm:items-center sm:justify-between"
+        >
+            <p class="label text-fg-subtle">
+                © {year} Joel Gauchia
+            </p>
+
+            <ul class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                {
+                    SOCIALS.map(({ label, href }) => (
+                        <li>
+                            <a
+                                href={href}
+                                target={href.startsWith("mailto:") ? undefined : "_blank"}
+                                rel={
+                                    href.startsWith("mailto:")
+                                        ? undefined
+                                        : "noopener noreferrer"
+                                }
+                                class="label border-b border-transparent pb-0.5 text-fg-muted transition-colors duration-200 hover:border-accent hover:text-accent"
+                            >
+                                {label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+
+        {/* Colophon — the note a printed page carries about how it was set.
+            The end mark that closes it is a door; see /collection. */}
+        <p class="mt-8 font-mono text-[11px] leading-relaxed text-fg-subtle/80">
+            Set in Instrument Serif, Inter and JetBrains Mono. Built with Astro
+            and Tailwind, served from a Node adapter.<a
+                href="/collection"
+                aria-label="A page I don't link to"
+                class="ml-2 inline-block size-2 translate-y-px bg-line-strong align-baseline transition-colors duration-300 hover:bg-accent focus-visible:bg-accent"
+            ></a>
+        </p>
     </div>
 </footer>

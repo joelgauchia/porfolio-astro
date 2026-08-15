@@ -1,0 +1,42 @@
+---
+import MoonIcon from "../icons/Moon.astro";
+import SunIcon from "../icons/Sun.astro";
+---
+
+<button
+    type="button"
+    id="theme-toggle"
+    class="grid size-8 shrink-0 place-items-center border border-transparent text-fg-subtle transition-colors duration-200 hover:border-line hover:text-fg"
+    aria-label="Toggle colour theme"
+    aria-live="polite"
+>
+    {/* Both icons ship in the markup; CSS picks the one for the active theme,
+        which keeps the toggle correct even before the script runs. */}
+    <SunIcon class="size-4 dark:hidden" />
+    <MoonIcon class="hidden size-4 dark:block" />
+</button>
+
+<script>
+    const toggle = document.getElementById("theme-toggle");
+    const root = document.documentElement;
+
+    const label = () =>
+        `Switch to ${root.classList.contains("dark") ? "light" : "dark"} theme`;
+
+    toggle?.setAttribute("aria-label", label());
+
+    toggle?.addEventListener("click", () => {
+        const dark = root.classList.toggle("dark");
+        root.style.colorScheme = dark ? "dark" : "light";
+        localStorage.setItem("theme", dark ? "dark" : "light");
+        toggle.setAttribute("aria-label", label());
+    });
+
+    // Follow the OS only while the visitor has not made an explicit choice.
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+        if (localStorage.getItem("theme")) return;
+        root.classList.toggle("dark", event.matches);
+        root.style.colorScheme = event.matches ? "dark" : "light";
+        toggle?.setAttribute("aria-label", label());
+    });
+</script>

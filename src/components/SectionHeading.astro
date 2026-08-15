@@ -1,0 +1,34 @@
+---
+interface Props {
+    /** Printed as the section index, e.g. "01". */
+    index: string;
+    label: string;
+    title: string;
+    /** Optional standfirst set under the title. */
+    lede?: string;
+}
+
+const { index, label, lede, title } = Astro.props;
+---
+
+{/* The label row reads like a running head: index, name, then a rule that
+    carries out to the margin. */}
+<div class="mb-10 sm:mb-14" data-reveal>
+    <div class="flex items-center gap-4">
+        <span class="label text-accent">{index}</span>
+        <span class="label text-fg-subtle">{label}</span>
+        <span class="h-px flex-1 bg-line" aria-hidden="true"></span>
+    </div>
+
+    <h2 class="font-display mt-5 text-4xl sm:text-5xl lg:text-6xl">
+        {title}
+    </h2>
+
+    {
+        lede && (
+            <p class="mt-4 max-w-xl text-pretty leading-relaxed text-fg-muted">
+                {lede}
+            </p>
+        )
+    }
+</div>

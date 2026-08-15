@@ -1,33 +1,65 @@
 ---
 import ExperienceItem from "./ExperienceItem.astro";
+
 const EXPERIENCE = [
     {
-        date: "March 2025 - Present",
-        title: "Software Engineer at AD Parts",
+        date: "Mar 2025 — Present",
+        datetime: "2025-03",
+        role: "Software Engineer",
+        company: "AD Parts",
         description:
-            "Took part in the development of a platform that connects partners and customers, facilitating the distiribution of automotive spare parts."
+            "The leading automotive spare-parts distribution group in Spain and Portugal, with 570 points of sale across the peninsula. Two of the internal products I've taken part in:",
+        current: true,
+        projects: [
+            {
+                name: "AD Mercurio",
+                description:
+                    "One communication channel between distribution centres and mechanic workshops. WhatsApp, Telegram, Google Chat and email all arrive in the same place, so a workshop reaches its supplier wherever it already is.",
+            },
+            {
+                name: "AD Firma",
+                description:
+                    "Advanced electronic signature. A process is defined signer by signer, the status advances with every signature collected, notifications go out on their own, and the signed document is delivered once every party has signed — closing signature processes 40% faster.",
+            },
+        ],
     },
     {
-        date: "May 2024 - March 2025",
-        title: "Full-Stack Developer at Sunset Technologies",
+        date: "May 2024 — Mar 2025",
+        datetime: "2024-05",
+        role: "Full-Stack Developer",
+        company: "Sunset Technologies",
         description:
-            "Developed and maintained eFarma, an advanced e-prescription platform that streamlines the medication prescription process for healthcare professionals. " 
-            + " Which reduced the time spent on the prescription process by 30%.",
-        link: "https://www.sunset-technologies.net/ca/efarma/",
+            "Healthcare software, where the cost of getting it wrong is measured in patient safety rather than downtime. Two products:",
+        projects: [
+            {
+                name: "SEVeM",
+                description:
+                    "Integration with the Sistema Español de Verificación de Medicamentos, the national register that keeps falsified medicines out of the legal supply chain. Hospitals and health centres verify a pack against it at the moment they dispense it.",
+                link: "https://www.sunset-technologies.net/ca/sunset-sevem/",
+            },
+            {
+                name: "eFarma",
+                description:
+                    "An e-prescription platform for healthcare professionals — cutting the time spent issuing a prescription by 30%.",
+                link: "https://www.sunset-technologies.net/ca/efarma/",
+            },
+        ],
     },
     {
-        date: "June 2023",
-        title: "Internship at Sunset Technologies",
+        date: "Jun 2023",
+        datetime: "2023-06",
+        role: "Software Engineering Intern",
+        company: "Sunset Technologies",
         description:
-            "Implemented an internal back-end microservice to obtain core information from the company's database. Developed new features for full-stack web applications. Maintaned existent applications.",
-    }
+            "Built an internal back-end microservice exposing core data from the company database, and shipped features across existing full-stack applications.",
+    },
 ];
 ---
 
-<ol class="relative border-s border-gray-200 ">
+<ol class="border-t border-line">
     {
-        EXPERIENCE.map((experience) => (
-            <li class="mb-10 ms-4">
+        EXPERIENCE.map((experience, index) => (
+            <li data-reveal style={`--reveal-delay:${index * 90}ms`}>
                 <ExperienceItem {...experience} />
             </li>
         ))

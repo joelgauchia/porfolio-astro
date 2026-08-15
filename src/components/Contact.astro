@@ -1,50 +1,166 @@
 ---
-import { actions } from "astro:actions";
+import { actions, isInputError } from "astro:actions";
+import SectionHeading from "./SectionHeading.astro";
+
+const result = Astro.getActionResult(actions.send);
+const sent = result && !result.error;
+const inputErrors = isInputError(result?.error) ? result.error.fields : {};
+const formError =
+    result?.error && !isInputError(result.error)
+        ? "Something went wrong sending your message. Please try again, or email me directly."
+        : null;
+
+// Underline fields rather than boxes: the form should read as a form on paper.
+const FIELD =
+    "w-full border-b border-line bg-transparent px-0 py-3 text-fg placeholder:text-fg-subtle transition-colors duration-200 hover:border-line-strong focus:border-accent focus:outline-none focus-visible:outline-none aria-[invalid=true]:border-red-500/70";
 ---
 
-<section>
-    <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
-        <h2 class="text-2xl text-center font-semibold mb-6">
-            Have a project in mind?
-        </h2>
-        <p class="mb-8 lg:mb-16 font-light text-center text-gray-500 sm:text-xl">
-            I bring ideas to life through cutting-edge software. Let’s get in touch!
+<SectionHeading
+    index="03"
+    label="Contact"
+    title="Have something in mind?"
+/>
+
+<div class="grid gap-12 lg:grid-cols-12 lg:gap-14">
+    <div class="lg:col-span-5" data-reveal>
+        <p class="max-w-sm text-pretty text-lg leading-relaxed text-fg-muted">
+            Always happy to connect. Any question at all, send it over — it
+            reaches me directly.
         </p>
-        <form action={actions.send} method="POST" class="space-y-8">
-            <div>
-                <label for="email" class="block mb-2 text-sm font-medium text-gray-900">
-                    Your email
-                </label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5"
-                    placeholder="name@domain.com"
-                    required
-                />
+
+        <a
+            href="mailto:joelgauchia@gmail.com"
+            class="font-display link-underline mt-8 block break-words text-2xl text-fg sm:text-3xl"
+        >
+            joelgauchia@gmail.com
+        </a>
+
+        <dl class="mt-10 border-t border-line">
+            <div class="flex gap-4 border-b border-line py-3">
+                <dt class="label w-24 shrink-0 pt-0.5 text-fg-subtle">Reply</dt>
+                <dd class="text-sm text-fg-muted">Within a day or two</dd>
             </div>
-            <div class="sm:col-span-2">
-                <label for="message" class="block mb-2 text-sm font-medium text-gray-900">
-                    Your message
-                </label>
-                <textarea
-                    id="message"
-                    name="message"
-                    rows="6"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500"
-                    placeholder="Leave a comment..."
-                    required
-                ></textarea>
+            <div class="flex gap-4 border-b border-line py-3">
+                <dt class="label w-24 shrink-0 pt-0.5 text-fg-subtle">Timezone</dt>
+                <dd class="text-sm text-fg-muted">CET — Girona, Spain</dd>
             </div>
-            <div class="flex justify-end">
-                <button
-                    type="submit"
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium bg-gray-900 text-white border transition border-gray-200 rounded-lg hover:bg-gray-100 hover:text-gray-800 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-100 focus:text-blue-700"
-                >
-                    Send Message
-                </button>
-            </div>
-        </form>
+        </dl>
     </div>
-</section>
+
+    <div class="lg:col-span-7" data-reveal style="--reveal-delay:80ms">
+        {
+            sent ? (
+                <div class="border border-accent/40 bg-accent-soft p-8" role="status">
+                    <span class="label text-accent">Sent</span>
+                    <p class="font-display mt-3 text-3xl">Message received.</p>
+                    <p class="mt-3 text-pretty leading-relaxed text-fg-muted">
+                        Thanks for reaching out — I'll get back to you shortly.
+                    </p>
+                </div>
+            ) : (
+                <form
+                    id="contact-form"
+                    action={actions.send}
+                    method="POST"
+                    class="flex flex-col gap-8"
+                >
+                    {formError && (
+                        <p
+                            class="border-l-2 border-red-500 bg-red-500/5 px-4 py-3 text-sm text-red-600 dark:text-red-400"
+                            role="alert"
+                        >
+                            {formError}
+                        </p>
+                    )}
+
+                    <div class="flex flex-col gap-1">
+                        <label for="email" class="label text-fg-subtle">
+                            01 — Your email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            autocomplete="email"
+                            required
+                            aria-invalid={inputErrors.email ? "true" : undefined}
+                            aria-describedby={inputErrors.email ? "email-error" : undefined}
+                            class={FIELD}
+                            placeholder="name@domain.com"
+                        />
+                        {inputErrors.email && (
+                            <p
+                                id="email-error"
+                                class="mt-2 font-mono text-xs text-red-600 dark:text-red-400"
+                            >
+                                Please enter a valid email address.
+                            </p>
+                        )}
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label for="message" class="label text-fg-subtle">
+                            02 — Your message
+                        </label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="6"
+                            required
+                            aria-invalid={inputErrors.message ? "true" : undefined}
+                            aria-describedby={inputErrors.message ? "message-error" : undefined}
+                            class={`${FIELD} resize-y`}
+                            placeholder="Tell me about your project…"
+                        />
+                        {inputErrors.message && (
+                            <p
+                                id="message-error"
+                                class="mt-2 font-mono text-xs text-red-600 dark:text-red-400"
+                            >
+                                Please write a short message.
+                            </p>
+                        )}
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="label group inline-flex items-center justify-center gap-3 self-start bg-fg px-6 py-4 text-bg transition-colors duration-200 hover:bg-accent disabled:pointer-events-none disabled:opacity-60"
+                    >
+                        <span data-label>Send message</span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="size-4 transition-transform duration-200 group-hover:translate-x-1"
+                            aria-hidden="true"
+                        >
+                            <path d="M5 12h14" />
+                            <path d="M13 6l6 6l-6 6" />
+                        </svg>
+                    </button>
+                </form>
+            )
+        }
+    </div>
+</div>
+
+<script>
+    // The form is a normal POST, so lock the button while the round trip runs
+    // to stop duplicate sends on slow connections.
+    const form = document.getElementById("contact-form") as HTMLFormElement | null;
+
+    form?.addEventListener("submit", () => {
+        if (!form.checkValidity()) return;
+
+        const button = form.querySelector("button[type=submit]");
+        const label = button?.querySelector("[data-label]");
+        if (!(button instanceof HTMLButtonElement) || !label) return;
+
+        button.disabled = true;
+        label.textContent = "Sending…";
+    });
+</script>

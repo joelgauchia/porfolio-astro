@@ -4,9 +4,13 @@ import tailwindcss from '@tailwindcss/vite';
 import node from "@astrojs/node";
 
 export default defineConfig({
+  site: 'https://joelgauchia.netlify.app',
+
   env: {
     schema: {
-      RESEND_API_KEY: envField.string({ context: "server", access: "secret"})
+      // Optional so a missing key only breaks the contact action instead of
+      // failing the whole page render; the action reports it cleanly.
+      RESEND_API_KEY: envField.string({ context: "server", access: "secret", optional: true })
     }
   },
 

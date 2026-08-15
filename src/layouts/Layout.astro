@@ -1,64 +1,99 @@
 ---
-import Header from "../components/Header.astro";
-import "@fontsource/poppins/400.css";
-import "@fontsource/poppins/600.css";
-import "@fontsource/poppins/800.css";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/jetbrains-mono";
+import "@fontsource/instrument-serif/400.css";
+import "@fontsource/instrument-serif/400-italic.css";
 import "../styles/global.css";
+import Header from "../components/Header.astro";
 import Seo from "../components/Seo.astro";
 
 interface Props {
 	title: string;
 	description: string;
+	/** Unlisted pages opt out of search indexing. */
+	noindex?: boolean;
+	/** Drops the section nav on pages that have no sections to point at. */
+	minimalNav?: boolean;
 }
 
-const { description, title } = Astro.props;
+const {
+	description,
+	title,
+	noindex = false,
+	minimalNav = false,
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<Seo />
 		<meta charset="UTF-8" />
-		<meta name="description" content={description} />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="theme-color" content="#FFFFFF" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="white" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<Seo title={title} description={description} noindex={noindex} />
+		{/* Resolve the theme before first paint so there is no flash of the wrong one. */}
+		<script is:inline>
+			(() => {
+				const stored = localStorage.getItem("theme");
+				const dark =
+					stored === "dark" ||
+					(!stored && matchMedia("(prefers-color-scheme: dark)").matches);
+				document.documentElement.classList.toggle("dark", dark);
+				document.documentElement.style.colorScheme = dark ? "dark" : "light";
+			})();
+		</script>
 		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
 	</head>
 	<body>
-		<div class="fixed inset-0 -z-10 min-h-screen w-full bg-white">
+		<a
+			href="#main"
+			class="label sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:left-6 focus-visible:top-6 focus-visible:z-50 focus-visible:bg-fg focus-visible:px-4 focus-visible:py-2 focus-visible:text-bg"
+		>
+			Skip to content
+		</a>
+
+		{/* Backdrop: the printed page. Two margin rules mark the text block, and a
+		    faint grain keeps the flat colour from looking like plastic. */}
+		<div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
 			<div
-				class="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"
+				class="mx-auto hidden h-full w-full max-w-5xl border-x border-line/70 lg:block"
+			>
+			</div>
+			<div
+				class="absolute inset-0 opacity-[0.035] dark:opacity-[0.05] [background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;)]"
 			>
 			</div>
 		</div>
-		<Header />
+
+		<Header minimal={minimalNav} />
 		<slot />
+
+		{/* Progressive enhancement: reveal-on-scroll. Without JS everything is
+		    already visible, since the hidden class is only added here. */}
+		<script is:inline>
+			(() => {
+				const targets = document.querySelectorAll("[data-reveal]");
+				if (
+					!targets.length ||
+					!("IntersectionObserver" in window) ||
+					matchMedia("(prefers-reduced-motion: reduce)").matches
+				)
+					return;
+
+				targets.forEach((el) => el.classList.add("reveal-hidden"));
+
+				const io = new IntersectionObserver(
+					(entries) => {
+						for (const entry of entries) {
+							if (!entry.isIntersecting) continue;
+							entry.target.classList.remove("reveal-hidden");
+							io.unobserve(entry.target);
+						}
+					},
+					{ rootMargin: "0px 0px -10% 0px", threshold: 0.05 }
+				);
+
+				targets.forEach((el) => io.observe(el));
+			})();
+		</script>
 	</body>
 </html>
-
-<style is:global>
-	html {
-		font-family: "Poppins", system-ui, sans-serif;
-		scroll-behavior: smooth;
-		background: #FFFFFF;
-	}
-
-	body {
-		color: #050505;
-		background: #FFFFFF;
-		display: flex;
-		flex-direction: column;
-		min-height: 100dvh;
-		overscroll-behavior: none;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		html {
-			scroll-behavior: auto;
-		}
-	}
-</style>

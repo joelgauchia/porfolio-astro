@@ -1,11 +1,21 @@
 ---
-const { class: className, id } = Astro.props;
+interface Props {
+    id?: string;
+    class?: string;
+}
+
+const { class: className = "", id } = Astro.props;
 ---
 
+{/* One column for the whole site, aligned to the margin rules drawn by the
+    backdrop in Layout.astro. */}
 <section
     id={id}
     data-section={id}
-    class={`section ${className} scroll-m-20 w-full mx-auto container lg:max-w-4xl md:max-w-2xl`}
+    class:list={[
+        "mx-auto w-full max-w-5xl scroll-mt-24 px-6 sm:px-10",
+        className,
+    ]}
 >
     <slot />
 </section>

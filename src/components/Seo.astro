@@ -1,28 +1,79 @@
 ---
 import { SEO } from "astro-seo";
+
+interface Props {
+    title?: string;
+    description?: string;
+    /** Keeps a page out of search results — used by the unlisted pages. */
+    noindex?: boolean;
+}
+
+const {
+    noindex = false,
+    title = "Joel Gauchia — Software Engineer & Co-founder of Horalia",
+    description = "Portfolio of Joel Gauchia, a software engineer in Girona, Spain. Co-founder of Horalia and full-stack engineer at AD Parts, working with Angular, Java and Spring Boot.",
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+const ogImage = new URL("/og.png", Astro.site ?? Astro.url).href;
 ---
 
 <SEO
-    title="Joel Gauchia - Full-Stack Developer & Software Engineer"
-    description="Portfolio of Joel Gauchia, a software developer specialized in modern technologies such as Angular, Java, and Spring Boot. Discover my projects and experience!"
+    title={title}
+    description={description}
+    canonical={canonical}
+    noindex={noindex}
+    nofollow={noindex}
     openGraph={{
         basic: {
-            title: "Joel Gauchia - Full-Stack Developer",
+            title: "Joel Gauchia — Software Engineer & Co-founder",
             type: "website",
-            image: "https://media.licdn.com/dms/image/v2/D4E03AQEO2klkkz_sEg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1693848424133?e=1744243200&v=beta&t=WMcUi5wr-vnvmF0mxy5SV9FZjHh65pFk3onpIJdusyY",
-            url: "https://joelgauchia.netlify.app",
+            image: ogImage,
+            url: canonical,
+        },
+        image: {
+            alt: "Joel Gauchia — Software Engineer & Co-founder of Horalia",
+            width: 1200,
+            height: 630,
+        },
+        optional: {
+            description,
+            siteName: "Joel Gauchia",
+            locale: "en_US",
         },
     }}
+    twitter={{
+        card: "summary_large_image",
+        title: "Joel Gauchia — Software Engineer & Co-founder",
+        description,
+        image: ogImage,
+        imageAlt: "Joel Gauchia — Software Engineer & Co-founder of Horalia",
+    }}
     extend={{
-        link: [{ rel: "icon", href: "/favicon.ico" }],
+        link: [
+            { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+            { rel: "icon", type: "image/x-icon", href: "/favicon.ico", sizes: "any" },
+            { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+        ],
         meta: [
             { name: "author", content: "Joel Gauchia" },
             {
                 name: "keywords",
                 content:
-                    "Full-Stack Developer, Software Engineer, Angular, Java, Spring Boot, SQL, Web Development, Backend, Frontend",
+                    "Joel Gauchia, Software Engineer, Co-founder, Horalia, Full-Stack Developer, Angular, Java, Spring Boot, Girona",
             },
-            { property: "og:locale", content: "en_US" },
+            /* Matches the light/dark page background so the mobile browser chrome
+               blends in instead of framing the page in white. */
+            {
+                name: "theme-color",
+                content: "#f7f4ef",
+                media: "(prefers-color-scheme: light)",
+            },
+            {
+                name: "theme-color",
+                content: "#12100e",
+                media: "(prefers-color-scheme: dark)",
+            },
         ],
     }}
 />

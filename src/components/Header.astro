@@ -1,18 +1,146 @@
 ---
+import ThemeToggle from "./ThemeToggle.astro";
+
+interface Props {
+    /** Unlisted pages have no sections, so they drop the anchor nav. */
+    minimal?: boolean;
+}
+
+const { minimal = false } = Astro.props;
+
 const NAV_TITLES = [
-    { title: "Home", label: 'home', link: "#top" },
-    { title: "Experience", label: 'experience', link: "#experience" },
-    { title: "Projects", label: 'projects', link: "#projects" },
-    { title: "Contact", label: 'contact', link: "#contact" },
-]
+    // `short` keeps the running head on one line on narrow phones.
+    { title: "Experience", short: "Exp", index: "01", link: "#experience" },
+    { title: "Horalia", short: "Horalia", index: "02", link: "#projects" },
+    { title: "Contact", short: "Say hi", index: "03", link: "#contact" },
+];
 ---
 
-<header class="flex flex-row mx-auto justify-center items-center py-5 w-full xl:w-[1120px]">
-    <nav class="flex gap-x-4 text-sm lg:gap-x-10 opacity-80">
-        {
-            NAV_TITLES.map(({ title, link }) => (
-                <a class="nav-link" href={link}>{title}</a>
-            ))
-        }
-    </nav>
+<header
+    id="site-header"
+    class="fixed inset-x-0 top-0 z-40 border-b border-transparent transition-colors duration-300 data-[scrolled]:border-line data-[scrolled]:bg-bg/80 data-[scrolled]:backdrop-blur-md"
+>
+    <div
+        class="mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-4 px-6 sm:h-16 sm:px-10"
+    >
+        <a
+            href={minimal ? "/" : "#top"}
+            class="font-display shrink-0 text-lg transition-colors duration-200 hover:text-accent sm:text-xl"
+        >
+            {minimal ? "← Joel Gauchia" : "Joel Gauchia"}
+        </a>
+
+        <nav id="site-nav" aria-label="Main" class="flex items-center gap-1 sm:gap-2">
+            <ul class="flex items-center">
+                {
+                    !minimal &&
+                        NAV_TITLES.map(({ title, short, index, link }) => (
+                        <li>
+                            <a
+                                class="nav-link label relative block px-2 py-2 text-fg-subtle transition-colors duration-200 hover:text-fg sm:px-3"
+                                href={link}
+                                data-nav={link.slice(1)}
+                            >
+                                <span class="mr-1.5 hidden text-fg-subtle/60 transition-colors duration-200 lg:inline">
+                                    {index}
+                                </span>
+                                <span class="sm:hidden">{short}</span>
+                                <span class="hidden sm:inline">{title}</span>
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+            {
+                !minimal && (
+                    <span class="mx-1 h-4 w-px bg-line sm:mx-2" aria-hidden="true" />
+                )
+            }
+            <ThemeToggle />
+        </nav>
+    </div>
 </header>
+
+<style>
+    /* The active marker is a hairline that draws itself in from the left —
+       a rule under the running head, not a pill behind it. */
+    .nav-link::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0.5rem;
+        bottom: 0.25rem;
+        height: 1px;
+        background-color: var(--color-accent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s var(--ease-out-quint);
+    }
+
+    @media (min-width: 640px) {
+        .nav-link::after {
+            inset-inline: 0.75rem;
+        }
+    }
+
+    .nav-link[aria-current="true"] {
+        color: var(--color-fg);
+    }
+
+    .nav-link[aria-current="true"]::after {
+        transform: scaleX(1);
+    }
+</style>
+
+<script>
+    const header = document.getElementById("site-header");
+
+    // Mark the header as scrolled so its rule and backdrop only appear once the
+    // page has moved — over the hero it stays invisible.
+    const onScroll = () => {
+        header?.toggleAttribute("data-scrolled", window.scrollY > 8);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const links = Array.from(
+        document.querySelectorAll<HTMLAnchorElement>("#site-nav [data-nav]")
+    );
+    const sections = links
+        .map((link) => document.getElementById(link.dataset.nav ?? ""))
+        .filter((el): el is HTMLElement => el !== null);
+
+    const setActive = (id: string) => {
+        for (const link of links) {
+            link.setAttribute("aria-current", String(link.dataset.nav === id));
+        }
+    };
+
+    if (sections.length) {
+        // Track the section closest to the top of the viewport rather than the
+        // last one intersecting — that keeps the highlight stable when two
+        // short sections are on screen at once.
+        const visible = new Map<string, number>();
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        visible.set(entry.target.id, entry.boundingClientRect.top);
+                    } else {
+                        visible.delete(entry.target.id);
+                    }
+                }
+
+                if (!visible.size) return;
+                const [topMost] = [...visible.entries()].sort(
+                    (a, b) => Math.abs(a[1]) - Math.abs(b[1])
+                );
+                setActive(topMost[0]);
+            },
+            { rootMargin: "-25% 0px -60% 0px", threshold: 0 }
+        );
+
+        sections.forEach((section) => observer.observe(section));
+    }
+</script>

@@ -1,50 +1,104 @@
 ---
+import ArrowUpRightIcon from "../icons/ArrowUpRight.astro";
+
 interface Props {
-    title: string;
+    role: string;
+    company: string;
     description: string;
     link?: string;
     date: string;
+    datetime?: string;
+    current?: boolean;
+    /** Individual products shipped inside the role, listed under it. */
+    projects?: { name: string; description: string; link?: string }[];
 }
 
-const { title, description, link, date } = Astro.props;
+const {
+    role,
+    company,
+    description,
+    link,
+    date,
+    datetime,
+    current = false,
+    projects = [],
+} = Astro.props;
 ---
 
+{/* A ruled entry, dates in the left margin like a printed CV. */}
 <div
-    class="absolute w-3 h-3 bg-gray-300 rounded-full mt-1.5 -start-1.5 border border-white "
+    class="group grid gap-x-8 gap-y-3 border-b border-line py-7 transition-colors duration-300 sm:py-9 lg:grid-cols-12"
 >
-</div>
-<time
-    class="mb-1 text-sm font-normal leading-none text-gray-400 "
-    >{date}</time
->
-<h3 class="mt-3 text-lg font-semibold text-gray-900 ">
-    {title}
-</h3>
-<p class="mb-4 mt-3 text-base font-normal text-gray-500 text-pretty">
-    {description}
-</p>
-{
-    link && (
-        <a
-            href={link}
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-100 focus:text-blue-700"
+    <div class="lg:col-span-3">
+        <time
+            class="label block text-fg-subtle transition-colors duration-300 group-hover:text-accent"
+            datetime={datetime}>{date}</time
         >
-            Learn more...{" "}
-            <svg
-                class="w-3 h-3 ms-2 rtl:rotate-180"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 14 10"
-            >
-                <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M1 5h12m0 0L9 1m4 4L9 9"
-                />
-            </svg>
-        </a>
-    )
-}
+        {
+            current && (
+                <span class="label mt-2 inline-flex items-center gap-2 text-accent">
+                    <span
+                        class="size-1.5 bg-accent motion-safe:animate-blink"
+                        aria-hidden="true"
+                    />
+                    Current
+                </span>
+            )
+        }
+    </div>
+
+    <div class="lg:col-span-9">
+        <h3 class="font-display text-2xl sm:text-3xl">
+            {role}
+            <span class="text-fg-subtle">at</span>
+            {company}
+        </h3>
+
+        <p class="mt-3 max-w-2xl text-pretty leading-relaxed text-fg-muted">
+            {description}
+        </p>
+
+        {
+            projects.length > 0 && (
+                <ul class="mt-6 max-w-2xl border-t border-line">
+                    {projects.map((project) => (
+                        <li class="border-b border-line py-4">
+                            <h4 class="label text-fg">
+                                {project.link ? (
+                                    <a
+                                        href={project.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-flex items-center gap-1.5 border-b border-transparent pb-0.5 transition-colors duration-200 hover:border-accent hover:text-accent"
+                                    >
+                                        {project.name}
+                                        <ArrowUpRightIcon class="size-3" />
+                                    </a>
+                                ) : (
+                                    project.name
+                                )}
+                            </h4>
+                            <p class="mt-2 text-pretty text-sm leading-relaxed text-fg-muted">
+                                {project.description}
+                            </p>
+                        </li>
+                    ))}
+                </ul>
+            )
+        }
+
+        {
+            link && (
+                <a
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="label mt-5 inline-flex items-center gap-1.5 text-fg-muted transition-colors duration-200 hover:text-accent"
+                >
+                    Visit the product
+                    <ArrowUpRightIcon class="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+            )
+        }
+    </div>
+</div>
